@@ -55,12 +55,17 @@ function mainMenu() {
           },
           {
             type: 'input',
-            message: 'What department does the role belong to?',
-            name: 'relDep',
-          }
+            message: "What is the employee's role?",
+            name: 'empRole',
+          },
+          {
+            type: 'input',
+            message: "Who is the employee's manager?",
+            name: 'empManager',
+          },
         ])
         .then((data) => {
-          db.query('INSERT INTO role (title, department_id, salary) VALUES (?, ?, ?)', [data.addName, data.relDep, data.salary], (err => {
+          db.query('INSERT INTO employee (first_name, last_name) VALUES (?, ?)', [data.firstName, data.lastName], (err => {
             if (err) {
               console.err(err);
             }
