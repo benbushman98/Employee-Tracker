@@ -1,20 +1,25 @@
 INSERT INTO department (name)
-VALUES ("English"),
-       ("Art"),
-       ("Math"),
-       ("Science"),
-       ("History");
+VALUES ("Sales"),
+       ("Engineering"),
+       ("Finance"),
+       ("Legal");
 
 INSERT INTO role (title, department_id, salary)
-VALUES ("Core Teacher", 1, 50000),
-       ("Elective Teacher", 2, 50000),
-       ("Core Teacher", 1, 50000),
-       ("Elective Teacher", 2, 50000),
-       ("Core Teacher", 1, 50000);
+VALUES ("Sales Lead", 1, 100000),
+       ("Salesperson", 1, 80000),
+       ("Lead Engineer", 2, 150000),
+       ("Software Engineer", 2, 120000),
+       ("Account Manager", 3, 160000),
+       ("Accountant", 3, 125000),
+       ("Legal Team Lead", 4, 250000),
+       ("Lawyer", 4, 190000);
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Benjamin", "Bushman", 1, 101),
-       ("Spencer", "Bushman", 2, 102),
-       ("Kaddie", "Bushman", 1, 101),
-       ("John", "Bushman", 2, 102),
-       ("Adam", "Bushman", 1, 101);
+
+
+
+INSERT INTO employee (first_name, last_name)
+VALUES ("John", "Doe"),
+       ("Mike", "Chan"),
+       ("Kaddie", "Bushman"),
+       ("John", "Bushman"),
+       ("Adam", "Bushman");
