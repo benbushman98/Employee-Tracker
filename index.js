@@ -1,6 +1,6 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer')
-
+require('console.table');
 
 // Connect to database
 const db = mysql.createConnection(
@@ -36,7 +36,7 @@ function mainMenu() {
     .prompt(questions)
     .then(answers => {
       if (answers.action === 'Action1') {
-        db.query('SELECT * FROM employee', function (err, results) {
+        db.query('SELECT id, first_name, last_name, role_id, manager_id FROM employee', function (err, results) {
           console.table(results);
           mainMenu();
         });
@@ -133,6 +133,8 @@ function mainMenu() {
             console.log('Department Added Successfully')
             mainMenu();
           })
+      } else if (answers.action === 'Action8') {
+        process.exit();
       }
     })
 };
