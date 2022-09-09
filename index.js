@@ -42,38 +42,33 @@ function mainMenu() {
         });
       } else if (answers.action === 'Action2') {
         inquirer
-        .prompt([
-          {
-            type: 'input',
-            message: "What is the employee's first name?",
-            name: 'firstName',
-          },
-          {
-            type: 'input',
-            message: "What is the employee's last name?",
-            name: 'lastName',
-          },
-          {
-            type: 'input',
-            message: "What is the employee's role?",
-            name: 'empRole',
-          },
-          {
-            type: 'input',
-            message: "Who is the employee's manager?",
-            name: 'empManager',
-          },
-        ])
-        .then((data) => {
-          db.query('INSERT INTO employee (first_name, last_name) VALUES (?, ?)', [data.firstName, data.lastName], (err => {
-            if (err) {
-              console.err(err);
-            }
+          .prompt([
+            {
+              type: 'input',
+              message: "What is the employee's first name?",
+              name: 'firstName',
+            },
+            {
+              type: 'input',
+              message: "What is the employee's last name?",
+              name: 'lastName',
+            },
+            {
+              type: 'input',
+              message: "What is the employee's role?",
+              name: 'empRole',
+            },
+            {
+              type: 'input',
+              message: "Who is the employee's manager?",
+              name: 'empManager',
+            },
+          ])
+          .then((data) => {
+            db.query('INSERT INTO employee (first_name, last_name) VALUES (?, ?)', [data.firstName, data.lastName]);
+            console.log('Employee Added Successfully')
+            mainMenu();
           })
-          )
-          console.log('Employee Added Successfully')
-          mainMenu();
-        })
       } else if (answers.action === 'Action3') {
 
       } else if (answers.action === 'Action4') {
@@ -82,34 +77,40 @@ function mainMenu() {
           mainMenu();
         });
       } else if (answers.action === 'Action5') {
-        inquirer
-          .prompt([
-            {
-              type: 'input',
-              message: 'What is the name of the role?',
-              name: 'addName',
-            },
-            {
-              type: 'input',
-              message: 'What is the salary of the role?',
-              name: 'salary',
-            },
-            {
-              type: 'input',
-              message: 'What department does the role belong to?',
-              name: 'relDep',
-            }
-          ])
-          .then((data) => {
-            db.query('INSERT INTO role (title, department_id, salary) VALUES (?, ?, ?)', [data.addName, data.relDep, data.salary], (err => {
-              if (err) {
-                console.err(err);
+        db.query("SELECT * FROM department", (err, results) => {
+          if (err) throw err;
+          inquirer
+            .prompt([
+              {
+                type: 'input',
+                message: 'What is the name of the role?',
+                name: 'addName',
+              },
+              {
+                type: 'input',
+                message: 'What is the salary of the role?',
+                name: 'addSalary',
+              },
+              {
+                type: "list",
+                message: "What is the department this role belongs to?",
+                name: 'addDepartment_id',
+                choices: () => {
+                  let departmentsArray = [];
+                  for (const department of results) {
+                    departmentsArray.push(department.id);
+                  }
+                  return departmentsArray;
+
+                }
               }
+            ])
+            .then((data) => {
+              db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [data.addName, data.addSalary, data.addDepartment_id]);
+              console.log("Role Added Successfully")
+              mainMenu();
             })
-            )
-            console.log('Role Added Successfully')
-            mainMenu();
-          })
+        })
       } else if (answers.action === 'Action6') {
         db.query('SELECT * FROM department', function (err, results) {
           console.table(results);
