@@ -41,34 +41,45 @@ function mainMenu() {
           mainMenu();
         });
       } else if (answers.action === 'Action2') {
-        inquirer
-          .prompt([
-            {
-              type: 'input',
-              message: "What is the employee's first name?",
-              name: 'firstName',
-            },
-            {
-              type: 'input',
-              message: "What is the employee's last name?",
-              name: 'lastName',
-            },
-            {
-              type: 'input',
-              message: "What is the employee's role?",
-              name: 'empRole',
-            },
-            {
-              type: 'input',
-              message: "Who is the employee's manager?",
-              name: 'empManager',
-            },
-          ])
-          .then((data) => {
-            db.query('INSERT INTO employee (first_name, last_name) VALUES (?, ?)', [data.firstName, data.lastName]);
-            console.log('Employee Added Successfully')
-            mainMenu();
-          })
+        db.query("SELECT * FROM role", (err, results) => {
+          if (err) throw err;
+          inquirer
+            .prompt([
+              {
+                type: 'input',
+                message: 'What is the first name of the employee?',
+                name: 'firstName',
+              },
+              {
+                type: 'input',
+                message: 'What is the last name of the employee?',
+                name: 'lastName',
+              },
+              {
+                type: 'list',
+                message: 'What is the role of the employee?',
+                name: 'roleID',
+                choices: () => {
+                  let roleArray = [];
+                  for (const role of results) {
+                    roleArray.push(role.id);
+                  }
+                  return roleArray;
+                }
+              },
+              {
+                type: 'input',
+                message: 'Who is the manager of this employee?',
+                name: 'managerID',
+                choices: [1, 3, 5, 7]
+              },
+            ])
+            .then((data) => {
+              db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [data.firstName, data.lastName, data.roleID, data.managerID]);
+              console.log("Employee Added Successfully")
+              mainMenu();
+            })
+        })
       } else if (answers.action === 'Action3') {
 
       } else if (answers.action === 'Action4') {
