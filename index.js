@@ -60,18 +60,18 @@ function mainMenu() {
                 message: 'What is the role of the employee?',
                 name: 'roleID',
                 choices: () => {
-                  let roleArray = [];
+                  let roleDatabaseArray = [];
                   for (const role of results) {
-                    roleArray.push(role.id);
+                    roleDatabaseArray.push(role.id);
                   }
-                  return roleArray;
+                  return roleDatabaseArray;
                 }
               },
               {
-                type: 'input',
-                message: 'Who is the manager of this employee?',
+                type: 'list',
+                message: 'Manager ID for this employee?',
                 name: 'managerID',
-                choices: [1, 3, 5, 7]
+                choices: ["1", "3", "5", "7"]
               },
             ])
             .then((data) => {
@@ -81,6 +81,47 @@ function mainMenu() {
             })
         })
       } else if (answers.action === 'Action3') {
+        db.query("SELECT * FROM employee", (err, results) => {
+          if (err) throw err;
+          inquirer
+            .prompt([
+              {
+                type: 'list',
+                message: 'Which employee do you want to update?',
+                name: 'updateEmployee',
+                choices: () => {
+
+                  let employeeArray = [];
+                  for (const employeeName of results) {
+                    employeeArray.push(employeeName.first_name);
+                  }
+                  return employeeArray;
+                }
+              },
+              {
+                type: 'list',
+                message: 'Which role do you want to change to?',
+                name: 'updateEmployeeRole',
+                choices: () => {
+                  let updateEmployeeRoleArray = [];
+                  for (const employeeRole of results) {
+                    updateEmployeeRoleArray.push(employeeRole.role_id);
+                  }
+                  return updateEmployeeRoleArray;
+                }
+              }
+            ]).then((data) => {
+              db.query("UPDATE employee SET ? WHERE first_name = ?",
+                [
+                  {
+                    role_id: data.updateEmployeeRole
+                  }, data.updateEmployee
+                ],
+                console.log("Role Updated Successfully"),
+                mainMenu()
+              )
+            })
+        })
 
       } else if (answers.action === 'Action4') {
         db.query('SELECT * FROM role', function (err, results) {
@@ -107,11 +148,11 @@ function mainMenu() {
                 message: "What is the department this role belongs to?",
                 name: 'addDepartment_id',
                 choices: () => {
-                  let departmentsArray = [];
+                  let departmentsDatabaseArray = [];
                   for (const department of results) {
-                    departmentsArray.push(department.id);
+                    departmentsDatabaseArray.push(department.id);
                   }
-                  return departmentsArray;
+                  return departmentsDatabaseArray;
 
                 }
               }
