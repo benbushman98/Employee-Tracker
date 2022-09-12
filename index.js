@@ -71,13 +71,20 @@ function mainMenu() {
                 type: 'list',
                 message: 'Manager ID for this employee?',
                 name: 'managerID',
-                choices: ["1", "3", "5", "7"]
+                choices: ["1", "3", "5", "7", "None"]
               },
             ])
             .then((data) => {
+              if (data.managerID === "None") {
+                data.managerID = null
+                db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [data.firstName, data.lastName, data.roleID, data.managerID]);
+                console.log("Employee Added Successfully")
+                mainMenu();
+              } else {
               db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [data.firstName, data.lastName, data.roleID, data.managerID]);
               console.log("Employee Added Successfully")
               mainMenu();
+              }
             })
         })
       } else if (answers.action === 'Action3') {
@@ -93,7 +100,7 @@ function mainMenu() {
 
                   let employeeArray = [];
                   for (const employeeName of results) {
-                    employeeArray.push(employeeName.first_name);
+                    employeeArray.push(employeeName.id);
                   }
                   return employeeArray;
                 }
@@ -111,7 +118,7 @@ function mainMenu() {
                 }
               }
             ]).then((data) => {
-              db.query("UPDATE employee SET ? WHERE first_name = ?",
+              db.query("UPDATE employee SET ? WHERE id = ?",
                 [
                   {
                     role_id: data.updateEmployeeRole
